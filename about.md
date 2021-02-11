@@ -4,12 +4,6 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
+Hello, I'm a software engineer based in the Netherlands. I like coding, cycling, chess and football.
 
-### More Information
-
-A place to include any other types of information that you'd like to include about yourself.
-
-### Contact me
-
-[email@domain.com](mailto:email@domain.com)
+![alt text](https://projecteuler.net/profile/commandini.png)
