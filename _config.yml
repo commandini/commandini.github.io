@@ -1,5 +1,9 @@
-title: Cayman theme
-description: Cayman is a clean, responsive theme for GitHub Pages.
-show_downloads: true
-google_analytics:
+lang: en
+title: commandini's tech blog
+author: Fakih Karademir
+social:
+  github: commandini
+description: "{mathematics, algorithms and programming puzzles}"
+google_analytics: G-5LLEJSRR1Y
 theme: jekyll-theme-cayman
+timezone: Europe/Amsterdam
