@@ -101,5 +101,5 @@ Here's an excerpt from Wikipedia's [Small business](https://en.wikipedia.org/wik
 | Large                  | <1000                            |
 | Enterprise             | >1000                            |
 
-Someone working for a medium business highly likely shares their birthday with some of their colleague(s).
-And it's certain that someone shares their birthday with some of their colleagues if they work for an enterprise.
+In any medium business, there is an employee highly likely sharing their birthday with some of their colleague(s).
+In any enterprise, there's certainly some employee sharing their birthday with some of their colleague(s).
