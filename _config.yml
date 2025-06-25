@@ -7,3 +7,5 @@ description: "{mathematics, algorithms and programming puzzles}"
 google_analytics: G-5LLEJSRR1Y
 theme: jekyll-theme-cayman
 timezone: Europe/Amsterdam
+plugins:
+  - jekyll-sitemap
