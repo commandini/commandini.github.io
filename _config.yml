@@ -9,3 +9,4 @@ theme: jekyll-theme-cayman
 timezone: Europe/Amsterdam
 plugins:
   - jekyll-sitemap
+  - jekyll-seo-tag
