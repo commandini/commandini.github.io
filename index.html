@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Fakih Karademir</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #000;
+        --border: rgba(255, 255, 255, 0.18);
+        --text: #f2f2f2;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        height: 100vh;
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "JetBrains Mono", monospace;
+        color: var(--text);
+      }
+      .container {
+        width: 92%;
+        max-width: 900px;
+        height: 580px;
+        position: relative;
+        background: rgba(0, 0, 0, 0.96);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.6rem 2rem 2rem;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.08),
+          inset 0 0 30px rgba(255, 255, 255, 0.04);
+      }
+      .footnote {
+        position: absolute;
+        right: 0;
+        bottom: -1.5rem;
+        font-size: 0.75rem;
+        font-style: italic;
+        opacity: 0.7;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.3rem;
+      }
+      h1 {
+        font-size: 1.6rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+      }
+      .tabs {
+        display: flex;
+        gap: 1.2rem;
+        font-size: 0.72rem;
+      }
+      .tab {
+        cursor: pointer;
+        opacity: 0.5;
+        padding-bottom: 2px;
+        border: none;
+        border-bottom: 1px solid transparent;
+        background: transparent;
+        color: var(--text);
+        font: inherit;
+        transition: opacity 0.15s ease, border-color 0.15s ease;
+      }
+      .tab.active {
+        opacity: 1;
+        border-bottom: 1px solid #fff;
+      }
+      .tab:focus-visible {
+        outline: 1px solid rgba(255, 255, 255, 0.6);
+        outline-offset: 4px;
+      }
+      .divider {
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          var(--border),
+          transparent
+        );
+        margin-bottom: 0.4rem;
+        opacity: 0.6;
+      }
+      .content-area {
+        flex: 1;
+        overflow: hidden;
+      }
+      .content {
+        display: none;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .content.active {
+        display: flex;
+      }
+      p {
+        max-width: 62ch;
+        line-height: 1.75;
+        font-size: 1rem;
+      }
+      .mini-table {
+        margin-top: 1.2rem;
+        width: 100%;
+        max-width: 62ch;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .row span:last-child {
+        text-align: right;
+      }
+      .gallery {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+      }
+      .frame-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+      }
+      .frame {
+        width: 620px;
+        height: 320px;
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .frame img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+      .caption {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .arrow {
+        font-size: 1.6rem;
+        cursor: pointer;
+        opacity: 0.4;
+        user-select: none;
+        padding: 0.6rem;
+        border: none;
+        background: transparent;
+        color: var(--text);
+        transition: opacity 0.15s ease;
+      }
+      .arrow:hover {
+        opacity: 1;
+      }
+      .arrow:focus-visible {
+        outline: 1px solid rgba(255, 255, 255, 0.6);
+        outline-offset: 4px;
+      }
+      @media (max-width: 720px) {
+        .container {
+          height: auto;
+          min-height: 580px;
+          padding: 1.4rem;
+        }
+        header {
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .tabs {
+          flex-wrap: wrap;
+          gap: 0.8rem;
+        }
+        .gallery {
+          gap: 0.6rem;
+        }
+        .frame {
+          width: 100%;
+          max-width: 100%;
+          height: 240px;
+        }
+        p,
+        .mini-table {
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1 class="scramble" data-text="Fakih Karademir"></h1>
+        <div class="tabs" role="tablist" aria-label="Profile sections">
+          <button
+            class="tab active"
+            data-tab="coding"
+            role="tab"
+            aria-selected="true"
+          >
+            coding
+          </button>
+          <button
+            class="tab"
+            data-tab="cycling"
+            role="tab"
+            aria-selected="false"
+          >
+            cycling
+          </button>
+          <button
+            class="tab"
+            data-tab="travel"
+            role="tab"
+            aria-selected="false"
+          >
+            travel
+          </button>
+          <button
+            class="tab"
+            data-tab="gallery"
+            role="tab"
+            aria-selected="false"
+          >
+            gallery
+          </button>
+        </div>
+      </header>
+      <div class="divider"></div>
+      <div class="content-area">
+        <div class="content active" id="coding">
+          <p>
+            I'm an experienced software engineer specializing in backend
+            systems. I like building correct, performant, clean, and
+            maintainable solutions. I enjoy solving programming and mathematical
+            challenges, as well as participating in coding competitions.
+          </p>
+          <div class="mini-table">
+            <div class="row">
+              <span>Al Zimmermann</span>
+              <span>Top 25% since 2020<br />Top 40% overall</span>
+              <span>Best rank: 5th out of 61</span>
+            </div>
+            <div class="row">
+              <span>IBM Ponder This</span>
+              <span>Top 3% overall</span>
+              <span
+                >Ranked in the top 150 <br />
+                of 5500+ solvers</span
+              >
+            </div>
+            <div class="row">
+              <span>NIO CodeCup</span>
+              <span>Top 40% overall</span>
+              <span>Best rank: 15th out of 59</span>
+            </div>
+          </div>
+        </div>
+        <div class="content" id="cycling">
+          <p>
+            I'm an amateur road cyclist and have cycled in 9 countries so far,
+            covering more than 52600 km, which is about 1.3 times around the
+            Earth. My Eddington number is 85 km. I have cycled on 362 of the 366
+            possible Gregorian day-month combinations. I'm a former member of
+            the following local cycling clubs.
+          </p>
+          <div class="mini-table">
+            <div class="row">
+              <span>Maximus Stampers</span>
+              <span>Utrecht, The Netherlands</span>
+            </div>
+            <div class="row">
+              <span>FC St. Pauli Radsport</span>
+              <span>Hamburg, Germany</span>
+            </div>
+            <div class="row">
+              <span>GWC de Adelaar</span>
+              <span>Hilversum, The Netherlands</span>
+            </div>
+          </div>
+        </div>
+        <div class="content" id="travel">
+          <div class="mini-table">
+            <div class="row">
+              <span>Visited countries</span>
+              <span>21</span>
+            </div>
+            <div class="row">
+              <span>Countries lived in for 6+ months</span>
+              <span>4</span>
+            </div>
+            <div class="row">
+              <span>International flights taken</span>
+              <span>83+</span>
+            </div>
+            <div class="row">
+              <span>Domestic flights taken</span>
+              <span>52+</span>
+            </div>
+          </div>
+        </div>
+        <div class="content" id="gallery">
+          <div class="gallery">
+            <button
+              class="arrow left"
+              aria-label="Previous image"
+              type="button"
+            >
+              &#8592;
+            </button>
+            <div class="frame-wrapper">
+              <div class="frame">
+                <img id="gallery-img" src="" alt="" loading="lazy" />
+              </div>
+              <div class="caption" id="caption"></div>
+            </div>
+            <button class="arrow right" aria-label="Next image" type="button">
+              &#8594;
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="footnote">Last updated on 21.06.2026</div>
+    </div>
+    <script>
+      function scrambleReveal(element) {
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        const finalText = element.dataset.text;
+        let revealProgress = 0;
+        const interval = setInterval(() => {
+          element.textContent = finalText
+            .split("")
+            .map((_, i) =>
+              i < revealProgress
+                ? finalText[i]
+                : letters[Math.floor(Math.random() * letters.length)]
+            )
+            .join("");
+          revealProgress += 0.2;
+          if (revealProgress >= finalText.length) {
+            clearInterval(interval);
+            element.textContent = finalText;
+          }
+        }, 40);
+      }
+      document.querySelectorAll(".scramble").forEach(scrambleReveal);
+      const tabs = document.querySelectorAll(".tab");
+      const contents = document.querySelectorAll(".content");
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => {
+            t.classList.remove("active");
+            t.setAttribute("aria-selected", "false");
+          });
+          contents.forEach((c) => {
+            c.classList.remove("active");
+          });
+          tab.classList.add("active");
+          tab.setAttribute("aria-selected", "true");
+          document.getElementById(tab.dataset.tab).classList.add("active");
+          if (tab.dataset.tab === "gallery" && !galleryInitialized) {
+            initGallery();
+          }
+        });
+      });
+      const galleryImages = [
+        {
+          src: "images/ventoux.jpg",
+          text: "Solitary at the summit of Mont Ventoux, July 2016",
+        },
+        {
+          src: "images/gwc.jpg",
+          text: "Cruising at 40 kph with De Adelaar, September 2020",
+        },
+        {
+          src: "images/gear.jpg",
+          text: "J. Schwartz: 'The Man and The Gear'",
+        },
+      ];
+      let currentImageIndex = 0;
+      let galleryInitialized = false;
+      const galleryImage = document.getElementById("gallery-img");
+      const galleryCaption = document.getElementById("caption");
+      function renderCurrentImage() {
+        const { src, text } = galleryImages[currentImageIndex];
+        galleryImage.src = src;
+        galleryImage.alt = text;
+        galleryCaption.textContent = text;
+      }
+      function initGallery() {
+        galleryInitialized = true;
+        currentImageIndex = Math.floor(Math.random() * galleryImages.length);
+        renderCurrentImage();
+      }
+      function moveGallery(offset) {
+        currentImageIndex =
+          (currentImageIndex + offset + galleryImages.length) %
+          galleryImages.length;
+        renderCurrentImage();
+      }
+      const leftButton = document.querySelector(".left");
+      const rightButton = document.querySelector(".right");
+      leftButton.addEventListener("click", () => moveGallery(-1));
+      rightButton.addEventListener("click", () => moveGallery(1));
+      document.addEventListener("keydown", (e) => {
+        if (!document.getElementById("gallery").classList.contains("active")) {
+          return;
+        }
+        switch (e.key) {
+          case "ArrowLeft":
+            moveGallery(-1);
+            break;
+          case "ArrowRight":
+            moveGallery(1);
+            break;
+        }
+      });
+    </script>
+  </body>
+</html>
