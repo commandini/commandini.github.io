@@ -4,7 +4,33 @@
     <meta charset="UTF-8" />
     <title>Fakih Karademir</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Fakih Karademir's Homepage" />
+    <meta
+      name="description"
+      content="Software engineer specializing in backend systems, algorithms, and mathematics. IBM Ponder This top 3%, Al Zimmermann competitions. Occasional tech blog on algorithms and programming."
+    />
+    <link rel="canonical" href="https://commandini.github.io/" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://commandini.github.io/" />
+    <meta property="og:site_name" content="commandini's tech blog" />
+    <meta property="og:title" content="Fakih Karademir" />
+    <meta
+      property="og:description"
+      content="Software engineer specializing in backend systems, algorithms, and mathematics. IBM Ponder This top 3%, Al Zimmermann competitions. Occasional tech blog on algorithms and programming."
+    />
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Fakih Karademir",
+        "url": "https://commandini.github.io/",
+        "sameAs": ["https://github.com/commandini"],
+        "jobTitle": "Software Engineer",
+        "description": "Backend systems engineer specializing in algorithms and mathematics"
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&display=swap"
       rel="stylesheet"
@@ -214,7 +240,7 @@
   <body>
     <div class="container">
       <header>
-        <h1 class="scramble" data-text="Fakih Karademir"></h1>
+        <h1 class="scramble" data-text="Fakih Karademir">Fakih Karademir</h1>
         <div class="tabs" role="tablist" aria-label="Profile sections">
           <button
             class="tab active"
@@ -350,6 +376,7 @@
       function scrambleReveal(element) {
         const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         const finalText = element.dataset.text;
+        element.textContent = "";
         let revealProgress = 0;
         const interval = setInterval(() => {
           element.textContent = finalText
