@@ -105,7 +105,7 @@
         font: inherit;
         transition: opacity 0.15s ease, border-color 0.15s ease;
       }
-      .tab.active {
+      .tab[aria-selected="true"] {
         opacity: 1;
         border-bottom: 1px solid #fff;
       }
@@ -135,8 +135,12 @@
         justify-content: center;
         flex-direction: column;
       }
-      .content.active {
+      .content:not([hidden]) {
         display: flex;
+      }
+      .content:focus-visible {
+        outline: 1px solid var(--text);
+        outline-offset: -2px;
       }
       p {
         max-width: 62ch;
@@ -161,20 +165,24 @@
         text-align: right;
       }
       .gallery {
+        width: 100%;
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 1.5rem;
+        padding-inline: 5px;
       }
       .frame-wrapper {
+        flex: 0 1 620px;
+        min-width: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 0.8rem;
       }
       .frame {
-        width: 620px;
+        width: 100%;
         height: 320px;
         border: 1px solid var(--border);
         display: flex;
@@ -191,6 +199,7 @@
         color: rgba(255, 255, 255, 0.85);
       }
       .arrow {
+        flex: none;
         font-size: 1.6rem;
         cursor: pointer;
         opacity: 0.4;
@@ -226,8 +235,6 @@
           gap: 0.6rem;
         }
         .frame {
-          width: 100%;
-          max-width: 100%;
           height: 240px;
         }
         p,
@@ -243,34 +250,41 @@
         <h1 class="scramble" data-text="Fakih Karademir">Fakih Karademir</h1>
         <div class="tabs" role="tablist" aria-label="Profile sections">
           <button
-            class="tab active"
-            data-tab="coding"
+            class="tab"
+            id="tab-coding"
             role="tab"
+            aria-controls="coding"
             aria-selected="true"
           >
             coding
           </button>
           <button
             class="tab"
-            data-tab="cycling"
+            id="tab-cycling"
             role="tab"
+            aria-controls="cycling"
             aria-selected="false"
+            tabindex="-1"
           >
             cycling
           </button>
           <button
             class="tab"
-            data-tab="travel"
+            id="tab-travel"
             role="tab"
+            aria-controls="travel"
             aria-selected="false"
+            tabindex="-1"
           >
             travel
           </button>
           <button
             class="tab"
-            data-tab="gallery"
+            id="tab-gallery"
             role="tab"
+            aria-controls="gallery"
             aria-selected="false"
+            tabindex="-1"
           >
             gallery
           </button>
@@ -278,7 +292,13 @@
       </header>
       <div class="divider"></div>
       <div class="content-area">
-        <div class="content active" id="coding">
+        <div
+          class="content"
+          id="coding"
+          role="tabpanel"
+          aria-labelledby="tab-coding"
+          tabindex="0"
+        >
           <p>
             I'm an experienced software engineer specializing in backend
             systems. I like building correct, performant, clean, and
@@ -306,7 +326,14 @@
             </div>
           </div>
         </div>
-        <div class="content" id="cycling">
+        <div
+          class="content"
+          id="cycling"
+          role="tabpanel"
+          aria-labelledby="tab-cycling"
+          tabindex="0"
+          hidden
+        >
           <p>
             I'm an amateur road cyclist and have cycled in 9 countries so far,
             covering more than 53000 km, which is about 1.3 times around the
@@ -329,7 +356,14 @@
             </div>
           </div>
         </div>
-        <div class="content" id="travel">
+        <div
+          class="content"
+          id="travel"
+          role="tabpanel"
+          aria-labelledby="tab-travel"
+          tabindex="0"
+          hidden
+        >
           <div class="mini-table">
             <div class="row">
               <span>Visited countries</span>
@@ -349,7 +383,14 @@
             </div>
           </div>
         </div>
-        <div class="content" id="gallery">
+        <div
+          class="content"
+          id="gallery"
+          role="tabpanel"
+          aria-labelledby="tab-gallery"
+          tabindex="0"
+          hidden
+        >
           <div class="gallery">
             <button
               class="arrow left"
@@ -360,7 +401,12 @@
             </button>
             <div class="frame-wrapper">
               <div class="frame">
-                <img id="gallery-img" src="" alt="" loading="lazy" />
+                <img
+                  id="gallery-img"
+                  src="images/ventoux.jpg"
+                  alt="Solitary at the summit of Mont Ventoux, July 2016"
+                  loading="lazy"
+                />
               </div>
               <div class="caption" id="caption"></div>
             </div>
@@ -396,22 +442,48 @@
       }
       document.querySelectorAll(".scramble").forEach(scrambleReveal);
       const tabs = document.querySelectorAll(".tab");
-      const contents = document.querySelectorAll(".content");
-      tabs.forEach((tab) => {
-        tab.addEventListener("click", () => {
-          tabs.forEach((t) => {
-            t.classList.remove("active");
-            t.setAttribute("aria-selected", "false");
-          });
-          contents.forEach((c) => {
-            c.classList.remove("active");
-          });
-          tab.classList.add("active");
-          tab.setAttribute("aria-selected", "true");
-          document.getElementById(tab.dataset.tab).classList.add("active");
-          if (tab.dataset.tab === "gallery" && !galleryInitialized) {
-            initGallery();
+      function selectTab(tab) {
+        tabs.forEach((item) => {
+          const selected = item === tab;
+          item.setAttribute("aria-selected", String(selected));
+          item.tabIndex = selected ? 0 : -1;
+          document.getElementById(item.getAttribute("aria-controls")).hidden =
+            !selected;
+        });
+        if (
+          tab.getAttribute("aria-controls") === "gallery" &&
+          !galleryInitialized
+        ) {
+          initGallery();
+        }
+      }
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => selectTab(tab));
+        tab.addEventListener("keydown", (e) => {
+          if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
+            return;
           }
+          let nextIndex;
+          switch (e.key) {
+            case "ArrowLeft":
+              nextIndex = (index - 1 + tabs.length) % tabs.length;
+              break;
+            case "ArrowRight":
+              nextIndex = (index + 1) % tabs.length;
+              break;
+            case "Home":
+              nextIndex = 0;
+              break;
+            case "End":
+              nextIndex = tabs.length - 1;
+              break;
+            default:
+              return;
+          }
+          e.preventDefault();
+          const nextTab = tabs[nextIndex];
+          selectTab(nextTab);
+          nextTab.focus();
         });
       });
       const galleryImages = [
@@ -453,8 +525,8 @@
       const rightButton = document.querySelector(".right");
       leftButton.addEventListener("click", () => moveGallery(-1));
       rightButton.addEventListener("click", () => moveGallery(1));
-      document.addEventListener("keydown", (e) => {
-        if (!document.getElementById("gallery").classList.contains("active")) {
+      document.getElementById("gallery").addEventListener("keydown", (e) => {
+        if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) {
           return;
         }
         switch (e.key) {
@@ -464,13 +536,18 @@
           case "ArrowRight":
             moveGallery(1);
             break;
+          default:
+            return;
         }
+        e.preventDefault();
       });
     </script>
     <script
       data-goatcounter="https://commandini.goatcounter.com/count"
       async
-      src="//gc.zgo.at/count.js"
+      src="https://gc.zgo.at/count.v5.js"
+      crossorigin="anonymous"
+      integrity="sha384-atnOLvQb9t+jTSipvd75X2yginT4PjVbqDdlJAmxMm+wYElFmeR6EmLP5bYeoRVQ"
     ></script>
   </body>
 </html>

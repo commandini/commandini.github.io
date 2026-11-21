@@ -4,7 +4,7 @@ layout: default
 [<- _Back_](./)
 
 ## GCD Performance Analysis
-_In this article, I explain several methods for finding the greatest common divisor (GCD) of two integers and provide their implementations in Java. A performance comparison follows._
+_In this article, I explain several methods for finding the greatest common divisor (GCD) of two non-negative integers and provide their implementations in Java. A performance comparison follows._
 
 ### Euclidean algorithm
 
@@ -561,11 +561,12 @@ The visualization below is generated via [JMH Visualizer](https://jmh.morethan.i
 ![GCD Benchmark Visualization](gcd_jmh_results.png)
 
 ### Conclusion
-* Highly optimized binary GCD algorithms, i.e. Guava's GCD and Lemire's GCD achieve the highest throughput compared to the other GCD implementations. In general, Guava’s GCD is faster because it uses branchless techniques that improve CPU pipeline efficiency and branch prediction. It avoids some method calls and uses bitwise arithmetic that JIT compiles into fewer, faster instructions.
-* Next, Euclidian GCD versions come. Notice that iterative and recursive versions of Euclidian GCD achieved close results. However, iterative version performs better. This can be explained with limited tail-call optimization (TCO) in JVM. The JVM doesn't reliably perform tail-call optimization, which means recursive calls aren’t transformed into jumps internally. So recursive calls still accumulate stack frames and overhead.
-* Plain binary GCD and its slightly optimized version achieved the lowest throughput. The optimized binary GCD performed better than the plain version due to reduced division and multiplication operations; nevertheless, both are nowhere near the performance of the other four GCD implementations.
-* One final caveat: All of the GCD implementations above — except for Guava's — do not check whether the given integer values are non-negative. I’ve omitted that check for simplicity, but ideally, the following lines can be added at the beginning of those methods:
+* Highly optimized binary GCD algorithms, i.e. Guava's GCD and Lemire's GCD, achieve the highest measured throughput in five of the six categories. In general, Guava’s GCD is faster, possibly because it uses branchless techniques that improve CPU pipeline efficiency and reduce the cost of branch mispredictions. It avoids some method calls and uses bitwise arithmetic that the JIT can compile into fewer, faster instructions.
+* Next, Euclidean GCD versions come. The iterative and recursive versions achieved close results, and the recursive version was actually faster in four of the six categories. Even though the JVM doesn't reliably perform tail-call optimization, the expected recursion overhead didn't show up in these measurements. Notably, both Euclidean versions outperform Lemire's GCD on LARGE and COPRIME inputs.
+* Plain binary GCD and its slightly optimized version achieved the lowest throughput. The optimized binary GCD performed better than the plain version in five of the six categories, possibly due to reduced division and multiplication operations. Nevertheless, both are nowhere near the performance of the other four GCD implementations.
+* One final caveat: All of the GCD implementations above — except for Guava's — do not check whether the given integer values are non-negative. I’ve omitted that check for simplicity. If neither input is `Integer.MIN_VALUE`, the following lines can be added at the beginning of those methods:
 ```java
 a = Math.abs(a);
 b = Math.abs(b);
 ```
+`Math.abs(Integer.MIN_VALUE)` is still negative. To support all signed `int` inputs, use a `long` GCD implementation and widen the inputs before taking their absolute values.

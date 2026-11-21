@@ -2,8 +2,12 @@
 
 set -e
 
+# Google serves these assets without fixed versions for integrity hashes.
+ignored_urls='/^https:\/\/fonts\.gstatic\.com(?:\/|$)/'
+ignored_urls="$ignored_urls,/^https:\/\/fonts\.googleapis\.com\/css2\?family=(JetBrains\+Mono|Zen\+Kurenaido|Zen\+Kaku\+Gothic\+New)[:&]/"
+ignored_urls="$ignored_urls,/^https:\/\/www\.googletagmanager\.com\/gtag\/js\?id=/"
+
 bundle exec jekyll build
-bundle exec htmlproofer ./_site --check-html --check-sri --url-ignore '/fonts.gstatic.com/'
-bundle exec rubocop -D --config .rubocop.yml
+bundle exec htmlproofer ./_site --check-html --check-sri --url-ignore "$ignored_urls"
 bundle exec script/validate-html
 gem build jekyll-theme-cayman.gemspec

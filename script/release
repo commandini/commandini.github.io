@@ -5,7 +5,12 @@ set -e
 
 # Make sure we're in the project root.
 
-cd $(dirname "$0")/..
+cd "$(dirname "$0")/.."
+
+if [ "$(git branch --show-current)" != main ]; then
+  echo "Only release from the main branch."
+  exit 1
+fi
 
 # Make sure the darn thing works
 
@@ -15,13 +20,6 @@ bundle update
 
 rm -rf jekyll-theme-cayman-*.gem
 gem build -q jekyll-theme-cayman.gemspec
-
-# Make sure we're on the master branch.
-
-(git branch | grep -q 'master') || {
-  echo "Only release from the master branch."
-  exit 1
-}
 
 # Figure out what version we're releasing.
 
@@ -39,4 +37,4 @@ git fetch -t origin
 # Tag it and bag it.
 
 gem push jekyll-theme-cayman-*.gem && git tag "$tag" &&
-  git push origin master && git push origin "$tag"
+  git push origin main && git push origin "$tag"
